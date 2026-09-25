@@ -21,7 +21,7 @@ RUN chmod -R u=rwX,go=rX /app
 # Runtime stage: no shell, no package manager, runs as UID 65532.
 # Debian 13 base: distroless stopped building Debian 12 images in Sept 2026,
 # so those no longer get security fixes.
-FROM gcr.io/distroless/nodejs22-debian13:nonroot
+FROM gcr.io/distroless/nodejs24-debian13:nonroot
 WORKDIR /app
 ENV NODE_ENV=production
 # No --chown: files stay owned by root, so the app can read its code but
