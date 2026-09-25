@@ -1,0 +1,13 @@
+# Shared Trivy settings for local runs (`trivy fs --config trivy.yaml .`)
+# and CI (the trivy-config input in .github/workflows/security.yml).
+severity:
+  - HIGH
+  - CRITICAL
+scan:
+  scanners:
+    - vuln
+    - secret
+    - misconfig
+  # Intentionally insecure teaching examples from the talk.
+  skip-dirs:
+    - insecure-examples

@@ -1,0 +1,23 @@
+# Kyverno: reject any pod in the orders namespace whose images aren't pinned
+# by digest. In the kind demo this rejects orders-api:after, which is the point:
+#   make policy-demo
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-image-digest
+spec:
+  background: true
+  rules:
+    - name: pin-by-digest
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+              namespaces: [orders]
+      validate:
+        failureAction: Enforce
+        message: "Images must be pinned by digest (image@sha256:...)."
+        pattern:
+          spec:
+            containers:
+              - image: "*@sha256:*"

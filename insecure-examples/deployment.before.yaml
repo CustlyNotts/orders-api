@@ -1,0 +1,29 @@
+# DO NOT USE. The "before" Deployment from the talk, kept for comparison.
+# Try applying it to the "orders" namespace: Pod Security Admission
+# ("restricted") refuses to create its pods.
+#   kubectl apply -f insecure-examples/deployment.before.yaml
+#   kubectl -n orders get events --field-selector reason=FailedCreate
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-api-before
+  namespace: orders
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders-api-before
+  template:
+    metadata:
+      labels:
+        app: orders-api-before
+    spec:
+      containers:
+        - name: api
+          image: orders-api:before
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          # no securityContext
+          # no resource limits
+          # default service account + token

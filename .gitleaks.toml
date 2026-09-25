@@ -1,0 +1,7 @@
+# Gitleaks config: the default rules, plus one reviewed exception.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Intentionally insecure teaching examples from the talk"
+paths = ['''^insecure-examples/''']

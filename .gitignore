@@ -1,0 +1,10 @@
+node_modules/
+*.log
+.DS_Store
+# Scanner output
+*.sarif
+*.spdx.json
+# Local secrets never belong in git; commit a .env.example instead.
+.env
+.env.*
+!.env.example

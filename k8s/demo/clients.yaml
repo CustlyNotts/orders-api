@@ -1,0 +1,56 @@
+# Two throwaway pods for the NetworkPolicy demo: "gateway" is allowed to call
+# orders-api, "intruder" is not. Both meet the "restricted" Pod Security
+# Standard, or the namespace would refuse them too.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gateway
+  namespace: orders
+  labels:
+    app: gateway
+spec:
+  automountServiceAccountToken: false
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 100
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: curl
+      image: curlimages/curl:8.22.0
+      command: ["sleep", "3600"]
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: ["ALL"]
+      resources:
+        limits:
+          memory: 32Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: intruder
+  namespace: orders
+  labels:
+    app: intruder
+spec:
+  automountServiceAccountToken: false
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 100
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: curl
+      image: curlimages/curl:8.22.0
+      command: ["sleep", "3600"]
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: ["ALL"]
+      resources:
+        limits:
+          memory: 32Mi

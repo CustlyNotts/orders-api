@@ -1,0 +1,6 @@
+# A .semgrepignore replaces Semgrep's defaults, so re-add the usual ones.
+:include .gitignore
+node_modules/
+
+# Intentionally insecure teaching examples from the talk.
+insecure-examples/

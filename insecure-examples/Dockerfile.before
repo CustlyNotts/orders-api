@@ -1,0 +1,13 @@
+# DO NOT USE. This is the "before" Dockerfile from the talk, kept for comparison.
+# Every scanner in this repo skips the insecure-examples/ folder on purpose.
+#
+# Build it from the repo root:
+#   docker build -f insecure-examples/Dockerfile.before -t orders-api:before .
+
+FROM node:latest
+WORKDIR /app
+COPY . .
+RUN npm install
+ENV API_KEY=sk_live_REPLACE_ME_not_a_real_key
+EXPOSE 3000
+CMD ["npm", "start"]

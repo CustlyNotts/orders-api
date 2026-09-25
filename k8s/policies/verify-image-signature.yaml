@@ -1,0 +1,27 @@
+# Kyverno: only run orders-api images that the security workflow on main
+# signed with cosign (keyless, via GitHub's OIDC identity).
+# Replace OWNER with your GitHub user or organization (lowercase in the image).
+# Needs a cluster that can reach ghcr.io and the Sigstore services.
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-orders-api-signature
+spec:
+  webhookTimeoutSeconds: 30
+  rules:
+    - name: signed-by-ci
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+      verifyImages:
+        - imageReferences:
+            - "ghcr.io/OWNER/orders-api*"
+          failureAction: Enforce
+          attestors:
+            - entries:
+                - keyless:
+                    subject: "https://github.com/OWNER/orders-api/.github/workflows/security.yml@refs/heads/main"
+                    issuer: "https://token.actions.githubusercontent.com"
+                    rekor:
+                      url: https://rekor.sigstore.dev

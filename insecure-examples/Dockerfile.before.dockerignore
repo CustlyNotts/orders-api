@@ -1,0 +1,4 @@
+# Deliberately almost empty, like many real projects: COPY . . in
+# Dockerfile.before pulls in .git, tests, scripts and anything else lying around.
+# Try: docker run --rm --entrypoint ls orders-api:before -la /app
+node_modules

@@ -1,0 +1,27 @@
+# Not deployed: orders-api doesn't call the Kubernetes API.
+# If an app does, this is the shape to aim for: one namespace, one named
+# resource, read-only verbs, bound to the app's own service account.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: read-orders-config
+  namespace: orders
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    resourceNames: ["orders-config"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: orders-api-read-config
+  namespace: orders
+subjects:
+  - kind: ServiceAccount
+    name: orders-api
+    namespace: orders
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: read-orders-config
