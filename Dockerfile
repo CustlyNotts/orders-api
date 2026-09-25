@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
 #
 # The "after" Dockerfile from the talk.
 # Base images are pinned by tag here; Renovate ("docker:pinDigests" in
@@ -21,7 +21,7 @@ RUN chmod -R u=rwX,go=rX /app
 # Runtime stage: no shell, no package manager, runs as UID 65532.
 # Debian 13 base: distroless stopped building Debian 12 images in Sept 2026,
 # so those no longer get security fixes.
-FROM gcr.io/distroless/nodejs24-debian13:nonroot
+FROM gcr.io/distroless/nodejs24-debian13:nonroot@sha256:bb6b03d81066993293a10feda7250e8e1cc034035fe9b61cfceededa7c8bf04d
 WORKDIR /app
 ENV NODE_ENV=production
 # No --chown: files stay owned by root, so the app can read its code but
