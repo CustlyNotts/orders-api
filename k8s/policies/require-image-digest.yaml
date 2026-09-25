@@ -18,6 +18,7 @@ spec:
         failureAction: Enforce
         message: "Images must be pinned by digest (image@sha256:...)."
         pattern:
-          spec:
+          # A Kyverno match pattern, not a pod spec, so this Semgrep rule doesn't apply.
+          spec: # nosemgrep: yaml.kubernetes.security.run-as-non-root.run-as-non-root
             containers:
               - image: "*@sha256:*"
