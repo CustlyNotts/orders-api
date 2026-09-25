@@ -16,8 +16,8 @@ for tag in before after; do
   size=$(docker image ls "$ref" --format '{{.Size}}' | head -1)
   user=$(docker image inspect -f '{{.Config.User}}' "$ref")
   json=$(trivy image --quiet --scanners vuln --severity HIGH,CRITICAL --format json "$ref")
-  high=$(grep -o '"Severity": *"HIGH"' <<<"$json" | wc -l | tr -d ' ')
-  crit=$(grep -o '"Severity": *"CRITICAL"' <<<"$json" | wc -l | tr -d ' ')
+  high=$( (grep -o '"Severity": *"HIGH"' <<<"$json" || true) | wc -l | tr -d ' ')
+  crit=$( (grep -o '"Severity": *"CRITICAL"' <<<"$json" || true) | wc -l | tr -d ' ')
   printf '%-8s %-10s %-10s %-6s %-8s\n' "$tag" "$size" "${user:-root}" "$high" "$crit"
 done
 
