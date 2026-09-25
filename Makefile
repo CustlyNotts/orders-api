@@ -46,7 +46,7 @@ netpol-demo: ## Gateway can reach orders-api; intruder can't
 	kubectl -n orders exec gateway -- curl -sS -m 5 http://orders-api/healthz
 	@echo
 	@echo "--- from intruder (should time out):"
-	-kubectl -n orders exec intruder -- curl -sS -m 5 http://orders-api/healthz
+	@kubectl -n orders exec intruder -- curl -sS -m 5 http://orders-api/healthz 2>&1 || echo "=> blocked by NetworkPolicy, as expected"
 
 psa-demo: ## Pod Security Admission refuses the insecure Deployment
 	kubectl apply -f insecure-examples/deployment.before.yaml
@@ -55,9 +55,11 @@ psa-demo: ## Pod Security Admission refuses the insecure Deployment
 	kubectl -n orders delete -f insecure-examples/deployment.before.yaml --ignore-not-found
 
 policy-demo: ## Install Kyverno and reject images not pinned by digest
-	kubectl create -f https://github.com/kyverno/kyverno/releases/download/$(KYVERNO_VERSION)/install.yaml || true
+	kubectl get namespace kyverno >/dev/null 2>&1 || kubectl create -f https://github.com/kyverno/kyverno/releases/download/$(KYVERNO_VERSION)/install.yaml
 	kubectl -n kyverno wait --for=condition=Available deployment --all --timeout=300s
-	kubectl apply -f k8s/policies/require-image-digest.yaml
+	@echo "Waiting for Kyverno's webhook to accept requests..."
+	@for i in $$(seq 1 24); do kubectl apply -f k8s/policies/require-image-digest.yaml 2>/dev/null && break; sleep 5; done
+	kubectl wait --for=condition=Ready clusterpolicy/require-image-digest --timeout=120s
 	@sleep 5
 	@echo "--- redeploying orders-api:after (tag, no digest), which should be denied:"
 	-kubectl -n orders rollout restart deployment/orders-api
