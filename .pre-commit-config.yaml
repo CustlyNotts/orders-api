@@ -8,7 +8,7 @@ repos:
       - id: gitleaks # blocks API keys, tokens and passwords
 
   - repo: https://github.com/semgrep/pre-commit
-    rev: v1.178.0
+    rev: v1.180.0
     hooks:
       - id: semgrep # fast SAST on the staged files
         args: ["--config", "p/default", "--error", "--skip-unknown-extensions"]
