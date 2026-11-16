@@ -6,7 +6,7 @@
 # scripts/pin-digests.sh to do it yourself.
 
 # Build stage: has npm, never ships.
-FROM node:24-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 AS build
+FROM node:26-slim@sha256:e6bedef217677b276c591795e169840edd9096dbf13f29df8ef8d1856b8820bc AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 # Production dependencies only, exactly as locked. The app has no
